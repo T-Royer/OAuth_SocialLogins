@@ -1,31 +1,12 @@
-# 🎓 TP OAuth + JWT - Template
+# TP OAuth + JWT - Template
 
 **BUT Informatique S4 - Module R401**
 
-## 📋 Objectif du TP
+## Objectif du TP
 
 Implémenter **Google OAuth 2.0** dans une application Vue.js + Express déjà fonctionnelle avec authentification JWT classique (email/password).
 
-⏱️ **Temps estimé** : 30 minutes
-
----
-
-## 🎯 Ce qui est fourni (85% fait)
-
-✅ Authentification email/password complète  
-✅ Génération et vérification JWT  
-✅ MongoDB avec modèle User (supporte googleId et picture)  
-✅ CORS configuré  
-✅ Frontend Vue.js complet (Login, Register, Home, AuthCallback)  
-✅ Bouton "Se connecter avec Google" déjà stylisé  
-✅ Middleware d'authentification JWT  
-✅ Routes classiques fonctionnelles
-
----
-
-## 🚀 Ce que vous devez faire (15% restant)
-
-### ✏️ **TODO 1** : Configuration Passport Google Strategy
+### **TODO 1** : Configuration Passport Google Strategy
 **Fichier** : \`backend/config/passport.js\`
 
 Implémenter la stratégie Google OAuth 2.0 avec :
@@ -33,16 +14,26 @@ Implémenter la stratégie Google OAuth 2.0 avec :
 - Option passReqToCallback: true
 - Callback async qui cherche/crée l'utilisateur
 
-### ✏️ **TODO 2** : Routes OAuth Google
+### **TODO 2** : Routes OAuth Google
 **Fichier** : \`backend/routes/auth.js\`
 
 Créer 2 routes :
 1. **GET /google** : Initie l'authentification Google
 2. **GET /google/callback** : Reçoit le callback, génère JWT, redirige
 
+
+### **TODO 3** : Ajout de nouveaux Social Sign-in
+Étendre l’application pour supporter 2 autres Social Sign-In (au choix) parmi :
+
+    GitHub
+    Discord
+    Facebook
+    Twitter / X
+    Microsoft
+
 ---
 
-## 📦 Installation
+## Installation
 
 ### Backend
 
@@ -63,7 +54,7 @@ cp .env.example .env
 
 ---
 
-## 🔧 Configuration Google Cloud Console
+## Configuration Google Cloud Console
 
 1. Créer un projet sur [Google Cloud Console](https://console.cloud.google.com/)
 2. API et services → Écran de consentement OAuth → Type: Externe
@@ -76,7 +67,7 @@ cp .env.example .env
 
 ---
 
-## 🏃 Lancer l'application
+## Lancer l'application
 
 \`\`\`bash
 # Terminal 1 - MongoDB
@@ -92,25 +83,14 @@ cd frontend && npm install && npm run dev
 Frontend: http://localhost:5173  
 Backend: http://localhost:3000
 
----
-
-## 🧪 Tester
-
-1. Créer un compte classique → OK si ça fonctionne
-2. Cliquer sur "Se connecter avec Google"
-3. Autoriser l'accès
-4. Vérifier redirection vers /home avec profil Google
-
----
-
-## 📚 Ressources
+## Ressources
 
 - [Passport Google OAuth](https://www.passportjs.org/packages/passport-google-oauth20/)
 - Slides du cours: slides/oauth-google-nodejs-jwt.html (Slides 21, 23, 18)
 
 ---
 
-## 🐛 Debugging
+## Debugging
 
 | Erreur | Solution |
 |--------|----------|
@@ -118,6 +98,4 @@ Backend: http://localhost:3000
 | Access blocked | Ajouter email dans Utilisateurs test |
 | Cannot find module | npm install dans backend |
 
----
 
-**Bon courage ! 🚀**
