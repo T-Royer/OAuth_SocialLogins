@@ -38,7 +38,7 @@ const authenticateToken = async (req, res, next) => {
     // }
     // req.user = userWithoutPassword;
     const { password, ...userWithoutPassword } = user;
-
+    req.user = userWithoutPassword;
 
     next();
   } catch (error) {

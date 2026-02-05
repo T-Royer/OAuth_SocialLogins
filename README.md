@@ -37,20 +37,20 @@ Créer 2 routes :
 
 ### Backend
 
-\`\`\`bash
+```bash
 cd backend
 npm install
 cp .env.example .env
 # Éditez .env avec vos Google credentials
-\`\`\`
+```
 
 ### Frontend
 
-\`\`\`bash
+```bash
 cd frontend
 npm install
 cp .env.example .env
-\`\`\`
+```
 
 ---
 

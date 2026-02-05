@@ -211,5 +211,29 @@ router.get('/google/callback',
   }
 );
 
+// Route pour initier l'authentification GitHub
+router.get('/github', passport.authenticate('github', {
+  scope: ['user:email'],
+  session: false
+}));
+
+// Route callback GitHub
+router.get('/github/callback',
+    passport.authenticate('github', {
+      session: false,
+      failureRedirect: `${process.env.FRONTEND_URL}/login?error=authentication_failed`
+    }),
+    (req, res) => {
+      try {
+        const user = req.user;
+        const token = generateToken(user._id);
+        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+      } catch (error) {
+        console.error('Erreur génération token:', error);
+        res.redirect(`${process.env.FRONTEND_URL}/login?error=token_generation_failed`);
+      }
+    }
+);
+
 
 module.exports = router;

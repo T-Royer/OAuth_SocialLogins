@@ -1,6 +1,9 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const { findUserByGoogleId, createUserFromGoogle } = require('../models/User');
+const GitHubStrategy = require('passport-github2').Strategy;
+const { findUserByGoogleId, createUserFromGoogle,
+        findUserByGithubId, createUserFromGithub
+} = require('../models/User');
 
 // =============================================================================
 // TODO 1: Configuration de la stratégie Google OAuth 2.0
@@ -48,6 +51,34 @@ passport.use(new GoogleStrategy({
       });
     }
 
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+}));
+
+// =============================================================================
+// Configuration de la stratégie GitHub OAuth 2.0
+// =============================================================================
+passport.use(new GitHubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL: process.env.GITHUB_CALLBACK_URL,
+  passReqToCallback: true
+}, async (req, accessToken, refreshToken, profile, done) => {
+  try {
+    const db = req.app.locals.db;
+
+    let user = await findUserByGithubId(db, profile.id);
+
+    if (!user) {
+      user = await createUserFromGithub(db, {
+        githubId: profile.id,
+        email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
+        name: profile.displayName || profile.username,
+        picture: profile._json.avatar_url
+      });
+    }
     done(null, user);
   } catch (error) {
     done(error, null);
