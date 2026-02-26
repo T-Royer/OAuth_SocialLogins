@@ -9,9 +9,9 @@ const router = express.Router();
 // Fonction pour générer un JWT
 const generateToken = (userId) => {
   return jwt.sign(
-    { userId: userId.toString() },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+      { userId: userId.toString() },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
   );
 };
 
@@ -185,7 +185,7 @@ router.get('/users', async (req, res) => {
 
 // TODO 2: Votre code ici
 
-// Route init auth Google
+// Route pour initier l'authentification Google
 router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email'],
   session: false
@@ -220,6 +220,29 @@ router.get('/github', passport.authenticate('github', {
 // Route callback GitHub
 router.get('/github/callback',
     passport.authenticate('github', {
+      session: false,
+      failureRedirect: `${process.env.FRONTEND_URL}/login?error=authentication_failed`
+    }),
+    (req, res) => {
+      try {
+        const user = req.user;
+        const token = generateToken(user._id);
+        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+      } catch (error) {
+        console.error('Erreur génération token:', error);
+        res.redirect(`${process.env.FRONTEND_URL}/login?error=token_generation_failed`);
+      }
+    }
+);
+
+// Route pour init auth Discord
+router.get('/discord', passport.authenticate('discord', {
+  session: false
+}));
+
+// Route callback Discord
+router.get('/discord/callback',
+    passport.authenticate('discord', {
       session: false,
       failureRedirect: `${process.env.FRONTEND_URL}/login?error=authentication_failed`
     }),

@@ -27,15 +27,15 @@ app.use(passport.initialize());
 const client = new MongoClient(process.env.MONGODB_URI);
 
 client.connect()
-  .then(() => {
-    console.log('✅ MongoDB connecté');
-    // Stocker la référence db dans app.locals pour les routes
-    app.locals.db = client.db();
-  })
-  .catch(err => {
-    console.error('❌ Erreur MongoDB:', err);
-    process.exit(1);
-  });
+    .then(() => {
+      console.log('✅ MongoDB connecté');
+      // Stocker la référence db dans app.locals pour les routes
+      app.locals.db = client.db();
+    })
+    .catch(err => {
+      console.error('❌ Erreur MongoDB:', err);
+      process.exit(1);
+    });
 
 // Routes
 app.use('/auth', authRoutes);
@@ -49,8 +49,12 @@ app.get('/', (req, res) => {
       'POST /auth/login': 'Se connecter (email/password)',
       'GET /auth/google': 'Se connecter avec Google',
       'GET /auth/google/callback': 'Callback Google OAuth',
+
       'GET /auth/github': 'Se connecter avec GitHub',
       'GET /auth/github/callback': 'Callback GitHub OAuth',
+
+      'GET /auth/discord': 'Se connecter avec Discord',
+      'GET /auth/discord/callback': 'Callback Discord OAuth',
 
       'GET /auth/profile': 'Profil (protégé par JWT)',
       'GET /auth/users': 'Liste utilisateurs (debug)'

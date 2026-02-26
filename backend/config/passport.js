@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
+const DiscordStrategy = require('passport-discord').Strategy;
 const { findUserByGoogleId, createUserFromGoogle,
         findUserByGithubId, createUserFromGithub
 } = require('../models/User');
@@ -84,6 +85,38 @@ passport.use(new GitHubStrategy({
     done(error, null);
   }
 }));
+
+// =============================================================================
+// Configuration de la stratégie Discord OAuth 2.0
+// =============================================================================
+passport.use(new DiscordStrategy({
+  clientID: process.env.DISCORD_CLIENT_ID,
+  clientSecret: process.env.DISCORD_CLIENT_SECRET,
+  callbackURL: process.env.DISCORD_CALLBACK_URL,
+  scope: ['identify', 'email'],
+  passReqToCallback: true
+}, async (req, accessToken, refreshToken, profile, done) => {
+  try {
+    const db = req.app.locals.db;
+
+    let user = await findUserByDiscordId(db, profile.id);
+
+    if (!user) { // user not found -> create
+      user = await createUserFromDiscord(db, {
+        discordId: profile.id,
+        email: profile.email,
+        name: profile.global_name || profile.username,
+        picture: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
+      });
+    }
+
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+}));
+
+
 
 
 // ⚠️ PAS de serializeUser/deserializeUser car on utilise JWT (stateless)
